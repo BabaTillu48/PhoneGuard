@@ -42,7 +42,7 @@ class MainActivity : AppCompatActivity() {
 
         findViewById<Button>(R.id.btnSaveKeywords).setOnClickListener {
             GuardPrefs.saveKeywords(this, editKeywords.text.toString())
-            statusText.text = "Keywords save हो गए ✅"
+            statusText.text = "Keywords saved."
         }
 
         findViewById<Button>(R.id.btnTestOverlay).setOnClickListener {
@@ -60,6 +60,6 @@ class MainActivity : AppCompatActivity() {
     private fun updateStreak() {
         val days = GuardPrefs.getStreakDays(this)
         val goal = GuardPrefs.getGoalDays()
-        streakDisplay.text = "🔥 Streak: $days / $goal दिन"
+        streakDisplay.text = "$days / $goal days"
     }
 }

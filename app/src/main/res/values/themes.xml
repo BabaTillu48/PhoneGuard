@@ -1,8 +1,11 @@
 <resources>
     <style name="Theme.PhoneGuard" parent="Theme.MaterialComponents.DayNight.NoActionBar">
-        <item name="colorPrimary">#2E7D32</item>
-        <item name="colorPrimaryDark">#1B5E20</item>
-        <item name="colorAccent">#FF6F00</item>
+        <item name="colorPrimary">#2C3E50</item>
+        <item name="colorPrimaryDark">#1A242F</item>
+        <item name="colorAccent">#5B7A9D</item>
+        <item name="android:windowBackground">#F4F4F4</item>
+        <item name="colorButtonNormal">#2C3E50</item>
+        <item name="android:textColorPrimary">#1A1A1A</item>
     </style>
 
     <style name="Theme.PhoneGuard.Overlay" parent="Theme.MaterialComponents.DayNight.NoActionBar">

@@ -29,12 +29,12 @@ object OverlayManager {
 
         val streakText = view.findViewById<TextView>(R.id.streakText)
         val days = GuardPrefs.getStreakDays(context)
-        streakText.text = "आपकी streak टूट गई थी $days दिन पर। restart करने के बाद नई streak शुरू होगी।"
+        streakText.text = "Your streak reset at day $days. It restarts after you reboot the phone."
 
         val closeBtn = view.findViewById<Button>(R.id.closeButton)
         closeBtn.setOnClickListener {
             stopSound()
-            closeBtn.text = "आवाज़ बंद — screen तो restart पर ही जाएगी"
+            closeBtn.text = "Sound muted"
             closeBtn.isEnabled = false
         }
 
@@ -47,10 +47,7 @@ object OverlayManager {
             WindowManager.LayoutParams.MATCH_PARENT,
             WindowManager.LayoutParams.MATCH_PARENT,
             type,
-            WindowManager.LayoutParams.FLAG_NOT_FOCUSABLE.inv().let {
-                // we WANT focus so back button doesn't dismiss it trivially, but allow input to our buttons
-                WindowManager.LayoutParams.FLAG_WATCH_OUTSIDE_TOUCH
-            },
+            WindowManager.LayoutParams.FLAG_WATCH_OUTSIDE_TOUCH,
             PixelFormat.TRANSLUCENT
         )
 
@@ -78,7 +75,7 @@ object OverlayManager {
         handler = Handler(Looper.getMainLooper())
         tts = TextToSpeech(context) { status ->
             if (status == TextToSpeech.SUCCESS) {
-                tts?.language = Locale("hi", "IN")
+                tts?.language = Locale.US
                 speakLoop()
             }
         }
@@ -87,7 +84,7 @@ object OverlayManager {
     private fun speakLoop() {
         if (!speaking) return
         tts?.speak(
-            "मत कर लाला, मत कर! यह गंदी चीज़ है।",
+            "Stop. This is not what you want to do.",
             TextToSpeech.QUEUE_FLUSH,
             null,
             "phoneguard_warning"

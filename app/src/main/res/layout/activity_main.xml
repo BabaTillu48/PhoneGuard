@@ -1,7 +1,8 @@
 <?xml version="1.0" encoding="utf-8"?>
 <ScrollView xmlns:android="http://schemas.android.com/apk/res/android"
     android:layout_width="match_parent"
-    android:layout_height="match_parent">
+    android:layout_height="match_parent"
+    android:background="#F4F4F4">
 
 <LinearLayout
     android:layout_width="match_parent"
@@ -9,85 +10,185 @@
     android:orientation="vertical"
     android:padding="20dp">
 
-    <TextView
-        android:layout_width="wrap_content"
-        android:layout_height="wrap_content"
-        android:text="🐱 PhoneGuard"
-        android:textSize="28sp"
-        android:textStyle="bold" />
-
-    <TextView
-        android:id="@+id/streakDisplay"
-        android:layout_width="wrap_content"
-        android:layout_height="wrap_content"
-        android:layout_marginTop="10dp"
-        android:textSize="18sp" />
-
-    <TextView
+    <LinearLayout
         android:layout_width="match_parent"
         android:layout_height="wrap_content"
-        android:layout_marginTop="24dp"
-        android:text="Step 1: Accessibility permission दें (यह browser की website check करने के लिए ज़रूरी है)"
-        android:textSize="14sp" />
+        android:orientation="horizontal"
+        android:gravity="center_vertical"
+        android:paddingTop="8dp"
+        android:paddingBottom="16dp">
 
-    <Button
-        android:id="@+id/btnAccessibility"
-        android:layout_width="wrap_content"
-        android:layout_height="wrap_content"
-        android:layout_marginTop="8dp"
-        android:text="Accessibility Settings खोलें" />
+        <ImageView
+            android:layout_width="40dp"
+            android:layout_height="40dp"
+            android:src="@drawable/ic_cat" />
 
-    <TextView
+        <TextView
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:layout_marginStart="12dp"
+            android:text="PhoneGuard"
+            android:textSize="24sp"
+            android:textStyle="bold"
+            android:textColor="#1A1A1A" />
+    </LinearLayout>
+
+    <LinearLayout
         android:layout_width="match_parent"
         android:layout_height="wrap_content"
-        android:layout_marginTop="20dp"
-        android:text="Step 2: Overlay permission दें (ताकि cat screen दिखा सके)"
-        android:textSize="14sp" />
+        android:orientation="vertical"
+        android:background="#FFFFFF"
+        android:padding="16dp"
+        android:layout_marginBottom="16dp">
 
-    <Button
-        android:id="@+id/btnOverlay"
-        android:layout_width="wrap_content"
-        android:layout_height="wrap_content"
-        android:layout_marginTop="8dp"
-        android:text="Overlay Permission दें" />
+        <TextView
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:text="CURRENT STREAK"
+            android:textSize="12sp"
+            android:textColor="#7F8C8D"
+            android:letterSpacing="0.1" />
 
-    <TextView
+        <TextView
+            android:id="@+id/streakDisplay"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:layout_marginTop="4dp"
+            android:textSize="22sp"
+            android:textStyle="bold"
+            android:textColor="#2C3E50" />
+    </LinearLayout>
+
+    <LinearLayout
         android:layout_width="match_parent"
         android:layout_height="wrap_content"
-        android:layout_marginTop="24dp"
-        android:text="Blocked keywords / domains (एक लाइन में एक):"
-        android:textSize="14sp" />
+        android:orientation="vertical"
+        android:background="#FFFFFF"
+        android:padding="16dp"
+        android:layout_marginBottom="16dp">
 
-    <EditText
-        android:id="@+id/editKeywords"
+        <TextView
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            android:text="Step 1 — Enable Accessibility Access"
+            android:textSize="15sp"
+            android:textStyle="bold"
+            android:textColor="#1A1A1A" />
+
+        <TextView
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            android:layout_marginTop="4dp"
+            android:text="Required so PhoneGuard can check which website is open in your browser."
+            android:textSize="13sp"
+            android:textColor="#7F8C8D" />
+
+        <Button
+            android:id="@+id/btnAccessibility"
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            android:layout_marginTop="10dp"
+            android:backgroundTint="#2C3E50"
+            android:textColor="#FFFFFF"
+            android:text="Open Accessibility Settings" />
+    </LinearLayout>
+
+    <LinearLayout
         android:layout_width="match_parent"
-        android:layout_height="160dp"
-        android:gravity="top"
-        android:inputType="textMultiLine"
-        android:background="#11000000"
-        android:padding="8dp" />
-
-    <Button
-        android:id="@+id/btnSaveKeywords"
-        android:layout_width="wrap_content"
         android:layout_height="wrap_content"
-        android:layout_marginTop="8dp"
-        android:text="Save Keywords" />
+        android:orientation="vertical"
+        android:background="#FFFFFF"
+        android:padding="16dp"
+        android:layout_marginBottom="16dp">
+
+        <TextView
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            android:text="Step 2 — Enable Overlay Permission"
+            android:textSize="15sp"
+            android:textStyle="bold"
+            android:textColor="#1A1A1A" />
+
+        <TextView
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            android:layout_marginTop="4dp"
+            android:text="Required so PhoneGuard can display the warning screen."
+            android:textSize="13sp"
+            android:textColor="#7F8C8D" />
+
+        <Button
+            android:id="@+id/btnOverlay"
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            android:layout_marginTop="10dp"
+            android:backgroundTint="#2C3E50"
+            android:textColor="#FFFFFF"
+            android:text="Grant Overlay Permission" />
+    </LinearLayout>
+
+    <LinearLayout
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content"
+        android:orientation="vertical"
+        android:background="#FFFFFF"
+        android:padding="16dp"
+        android:layout_marginBottom="16dp">
+
+        <TextView
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            android:text="Blocked Keywords / Domains"
+            android:textSize="15sp"
+            android:textStyle="bold"
+            android:textColor="#1A1A1A" />
+
+        <TextView
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            android:layout_marginTop="4dp"
+            android:text="One per line."
+            android:textSize="13sp"
+            android:textColor="#7F8C8D" />
+
+        <EditText
+            android:id="@+id/editKeywords"
+            android:layout_width="match_parent"
+            android:layout_height="160dp"
+            android:layout_marginTop="10dp"
+            android:gravity="top"
+            android:inputType="textMultiLine"
+            android:background="#F0F0F0"
+            android:textColor="#1A1A1A"
+            android:padding="10dp" />
+
+        <Button
+            android:id="@+id/btnSaveKeywords"
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            android:layout_marginTop="10dp"
+            android:backgroundTint="#5B7A9D"
+            android:textColor="#FFFFFF"
+            android:text="Save Keywords" />
+    </LinearLayout>
 
     <TextView
         android:id="@+id/statusText"
         android:layout_width="match_parent"
         android:layout_height="wrap_content"
-        android:layout_marginTop="20dp"
-        android:textColor="#2E7D32"
-        android:textSize="14sp" />
+        android:textColor="#2C3E50"
+        android:textSize="13sp"
+        android:layout_marginBottom="8dp" />
 
     <Button
         android:id="@+id/btnTestOverlay"
-        android:layout_width="wrap_content"
+        android:layout_width="match_parent"
         android:layout_height="wrap_content"
-        android:layout_marginTop="20dp"
-        android:text="Test करें (Cat screen दिखाओ)" />
+        android:layout_marginTop="4dp"
+        android:layout_marginBottom="24dp"
+        android:backgroundTint="#7F8C8D"
+        android:textColor="#FFFFFF"
+        android:text="Run Test (Preview Warning Screen)" />
 
 </LinearLayout>
 </ScrollView>
