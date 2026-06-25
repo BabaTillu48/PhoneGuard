@@ -10,13 +10,19 @@ class BrowserWatcherService : AccessibilityService() {
     private val browserPackages = setOf(
         "com.android.chrome",
         "com.chrome.beta",
+        "com.chrome.dev",
+        "com.chrome.canary",
         "org.mozilla.firefox",
+        "org.mozilla.focus",
         "com.opera.browser",
+        "com.opera.browser.beta",
         "com.brave.browser",
         "com.microsoft.emmx",
         "com.sec.android.app.sbrowser",
         "com.android.browser",
-        "com.duckduckgo.mobile.android"
+        "com.duckduckgo.mobile.android",
+        "com.UCMobile.intl",
+        "mark.via.gp"
     )
 
     override fun onAccessibilityEvent(event: AccessibilityEvent) {
@@ -30,55 +36,56 @@ class BrowserWatcherService : AccessibilityService() {
         }
         if (OverlayManager.isOverlayShowing()) return
 
-        val url = extractUrlFromBrowser(rootInActiveWindow) ?: return
-        val lowerUrl = url.lowercase()
-
+        val root = rootInActiveWindow ?: return
         val keywords = GuardPrefs.getKeywords(this)
-        val matched = keywords.any { lowerUrl.contains(it) }
+        if (keywords.isEmpty()) return
+
+        val screenText = StringBuilder()
+        collectText(root, screenText, depth = 0, maxNodes = NodeCounter())
+        val lowerText = screenText.toString().lowercase()
+
+        val matched = keywords.any { lowerText.contains(it) }
 
         if (matched) {
             OverlayManager.showBlockOverlay(this)
         }
     }
 
+    /** Small mutable counter so the recursive scan can cap total nodes visited (perf safety). */
+    private class NodeCounter(var count: Int = 0)
+
     /**
-     * Tries to find the address-bar text node of common browsers.
-     * This only reads the URL bar's visible text — it does NOT read keystrokes
-     * and does NOT function unless a supported browser is in the foreground.
+     * Walks the visible accessibility tree and collects all visible text
+     * (URL bar, page title, on-screen search results text, etc.).
+     * This does NOT read keystrokes — it only reads text that is already
+     * rendered on screen, and only while a browser app is in the foreground.
+     * Capped at ~400 nodes and depth 12 to stay lightweight.
      */
-    private fun extractUrlFromBrowser(root: AccessibilityNodeInfo?): String? {
-        if (root == null) return null
-        val urlBarIds = listOf(
-            "com.android.chrome:id/url_bar",
-            "org.mozilla.firefox:id/url_bar",
-            "org.mozilla.firefox:id/mozac_browser_toolbar_url_view",
-            "com.opera.browser:id/url_field",
-            "com.brave.browser:id/url_bar",
-            "com.microsoft.emmx:id/url_bar",
-            "com.sec.android.app.sbrowser:id/location_bar_edit_text"
-        )
-        for (id in urlBarIds) {
-            val nodes = root.findAccessibilityNodeInfosByViewId(id)
-            if (nodes.isNotEmpty()) {
-                val text = nodes[0].text?.toString()
-                if (!text.isNullOrEmpty()) return text
+    private fun collectText(
+        node: AccessibilityNodeInfo?,
+        out: StringBuilder,
+        depth: Int,
+        maxNodes: NodeCounter
+    ) {
+        if (node == null || depth > 12 || maxNodes.count > 400) return
+        maxNodes.count++
+
+        node.text?.let {
+            if (it.isNotEmpty()) {
+                out.append(it)
+                out.append(' ')
             }
         }
-        // Fallback: scan all text nodes for anything URL-like (rare path)
-        return findUrlLikeText(root, depth = 0)
-    }
+        node.contentDescription?.let {
+            if (it.isNotEmpty()) {
+                out.append(it)
+                out.append(' ')
+            }
+        }
 
-    private fun findUrlLikeText(node: AccessibilityNodeInfo?, depth: Int): String? {
-        if (node == null || depth > 6) return null
-        val text = node.text?.toString()
-        if (!text.isNullOrEmpty() && (text.contains(".com") || text.contains(".in") || text.contains("http"))) {
-            return text
-        }
         for (i in 0 until node.childCount) {
-            val result = findUrlLikeText(node.getChild(i), depth + 1)
-            if (result != null) return result
+            collectText(node.getChild(i), out, depth + 1, maxNodes)
         }
-        return null
     }
 
     override fun onInterrupt() {
