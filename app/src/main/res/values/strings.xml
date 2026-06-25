@@ -1,0 +1,4 @@
+<resources>
+    <string name="app_name">PhoneGuard</string>
+    <string name="accessibility_service_description">PhoneGuard सिर्फ यह देखता है कि आपका browser किस website पर है, ताकि blocked content खुलने पर warning दिखा सके। यह keyboard typing track नहीं करता।</string>
+</resources>
