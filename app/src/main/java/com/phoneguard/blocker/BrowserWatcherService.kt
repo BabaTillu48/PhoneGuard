@@ -9,14 +9,11 @@ class BrowserWatcherService : AccessibilityService() {
     private val browserPackages = setOf(
         "com.android.chrome",
         "com.chrome.beta",
-        "com.chrome.dev",
         "org.mozilla.firefox",
-        "org.mozilla.focus",
         "com.opera.browser",
         "com.brave.browser",
         "com.microsoft.emmx",
         "com.sec.android.app.sbrowser",
-        "com.android.browser",
         "com.duckduckgo.mobile.android"
     )
 
@@ -34,9 +31,8 @@ class BrowserWatcherService : AccessibilityService() {
         val keywords = GuardPrefs.getKeywords(this)
         if (keywords.isEmpty()) return
 
-        val screenText = StringBuilder()
-        collectText(root, screenText, depth = 0, nodeCounter = 0)
-        val lowerText = screenText.toString().lowercase()
+        val text = extractAllText(root)
+        val lowerText = text.lowercase()
 
         val matched = keywords.any { lowerText.contains(it) }
         if (matched) {
@@ -44,34 +40,28 @@ class BrowserWatcherService : AccessibilityService() {
         }
     }
 
-    private fun collectText(
-        node: AccessibilityNodeInfo?,
-        out: StringBuilder,
-        depth: Int,
-        nodeCounter: Int
-    ): Int {
-        if (node == null || depth > 12 || nodeCounter > 300) return nodeCounter
-
-        var count = nodeCounter + 1
-
-        node.text?.let {
-            if (it.isNotEmpty()) {
-                out.append(it).append(" ")
+    private fun extractAllText(node: AccessibilityNodeInfo?): String {
+        if (node == null) return ""
+        
+        val sb = StringBuilder()
+        val visited = mutableSetOf<AccessibilityNodeInfo>()
+        
+        fun walk(n: AccessibilityNodeInfo?) {
+            if (n == null || visited.size > 200) return
+            if (visited.contains(n)) return
+            visited.add(n)
+            
+            n.text?.let { if (it.isNotEmpty()) sb.append(it).append(" ") }
+            n.contentDescription?.let { if (it.isNotEmpty()) sb.append(it).append(" ") }
+            
+            for (i in 0 until n.childCount) {
+                walk(n.getChild(i))
             }
         }
-        node.contentDescription?.let {
-            if (it.isNotEmpty()) {
-                out.append(it).append(" ")
-            }
-        }
-
-        for (i in 0 until node.childCount) {
-            count = collectText(node.getChild(i), out, depth + 1, count)
-            if (count > 300) break
-        }
-        return count
+        
+        walk(node)
+        return sb.toString()
     }
 
-    override fun onInterrupt() {
-    }
+    override fun onInterrupt() {}
 }
