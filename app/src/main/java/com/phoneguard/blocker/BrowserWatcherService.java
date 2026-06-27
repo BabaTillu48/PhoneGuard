@@ -7,7 +7,7 @@ import java.util.HashSet;
 import java.util.Set;
 
 public class BrowserWatcherService extends AccessibilityService {
-    private static final Set<String> browserPackages = new HashSet<>();
+    private static final Set<String> browserPackages = new HashSet<String>();
 
     static {
         browserPackages.add("com.android.chrome");
@@ -18,7 +18,6 @@ public class BrowserWatcherService extends AccessibilityService {
         browserPackages.add("com.duckduckgo.mobile.android");
     }
 
-    @Override
     public void onAccessibilityEvent(AccessibilityEvent event) {
         String pkg = event.getPackageName() != null ? event.getPackageName().toString() : "";
         if (!browserPackages.contains(pkg)) return;
@@ -48,7 +47,7 @@ public class BrowserWatcherService extends AccessibilityService {
     private String extractAllText(AccessibilityNodeInfo node) {
         if (node == null) return "";
         StringBuilder sb = new StringBuilder();
-        Set<AccessibilityNodeInfo> visited = new HashSet<>();
+        Set<AccessibilityNodeInfo> visited = new HashSet<AccessibilityNodeInfo>();
         walk(node, sb, visited);
         return sb.toString();
     }
@@ -70,7 +69,6 @@ public class BrowserWatcherService extends AccessibilityService {
         }
     }
 
-    @Override
     public void onInterrupt() {
     }
 }

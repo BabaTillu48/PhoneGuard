@@ -19,7 +19,7 @@ public class OverlayManager {
     private static Handler handler = null;
     private static boolean speaking = false;
 
-    public static void showBlockOverlay(Context context) {
+    public static void showBlockOverlay(final Context context) {
         if (overlayView != null) return;
 
         WindowManager wm = (WindowManager) context.getSystemService(Context.WINDOW_SERVICE);
@@ -30,11 +30,13 @@ public class OverlayManager {
         long days = GuardPrefs.getStreakDays(context);
         streakText.setText("Your streak reset at day " + days + ". It restarts after you reboot.");
 
-        Button closeBtn = view.findViewById(R.id.closeButton);
-        closeBtn.setOnClickListener(v -> {
-            stopSound();
-            closeBtn.setText("Sound muted");
-            closeBtn.setEnabled(false);
+        final Button closeBtn = view.findViewById(R.id.closeButton);
+        closeBtn.setOnClickListener(new View.OnClickListener() {
+            public void onClick(View v) {
+                stopSound();
+                closeBtn.setText("Sound muted");
+                closeBtn.setEnabled(false);
+            }
         });
 
         int type = Build.VERSION.SDK_INT >= Build.VERSION_CODES.O
@@ -69,25 +71,29 @@ public class OverlayManager {
         stopSound();
     }
 
-    private static void startSound(Context context) {
+    private static void startSound(final Context context) {
         if (speaking) return;
         speaking = true;
         handler = new Handler(Looper.getMainLooper());
-        tts = new TextToSpeech(context, status -> {
-            if (status == TextToSpeech.SUCCESS) {
-                tts.setLanguage(Locale.US);
-                speakLoop();
+        tts = new TextToSpeech(context, new TextToSpeech.OnInitListener() {
+            public void onInit(int status) {
+                if (status == TextToSpeech.SUCCESS) {
+                    tts.setLanguage(Locale.US);
+                    speakLoop();
+                }
             }
         });
     }
 
     private static void speakLoop() {
-        if (!speaking) return;
-        if (tts != null) {
-            tts.speak("Stop. This is not what you want to do.", TextToSpeech.QUEUE_FLUSH, null);
-        }
+        if (!speaking || tts == null) return;
+        tts.speak("Stop. This is not what you want to do.", TextToSpeech.QUEUE_FLUSH, null);
         if (handler != null) {
-            handler.postDelayed(OverlayManager::speakLoop, 4000);
+            handler.postDelayed(new Runnable() {
+                public void run() {
+                    speakLoop();
+                }
+            }, 4000);
         }
     }
 

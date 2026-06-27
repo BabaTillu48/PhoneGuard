@@ -5,6 +5,7 @@ import android.net.Uri;
 import android.os.Build;
 import android.os.Bundle;
 import android.provider.Settings;
+import android.view.View;
 import android.widget.Button;
 import android.widget.EditText;
 import android.widget.TextView;
@@ -16,7 +17,6 @@ public class MainActivity extends AppCompatActivity {
     private TextView statusText;
     private EditText editKeywords;
 
-    @Override
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
         setContentView(R.layout.activity_main);
@@ -32,33 +32,42 @@ public class MainActivity extends AppCompatActivity {
         }
         editKeywords.setText(sb.toString());
 
-        findViewById(R.id.btnAccessibility).setOnClickListener(v ->
-                startActivity(new Intent(Settings.ACTION_ACCESSIBILITY_SETTINGS))
-        );
+        final MainActivity self = this;
 
-        findViewById(R.id.btnOverlay).setOnClickListener(v -> {
-            if (Build.VERSION.SDK_INT >= Build.VERSION_CODES.M) {
-                Intent intent = new Intent(
-                        Settings.ACTION_MANAGE_OVERLAY_PERMISSION,
-                        Uri.parse("package:" + getPackageName())
-                );
-                startActivity(intent);
+        findViewById(R.id.btnAccessibility).setOnClickListener(new View.OnClickListener() {
+            public void onClick(View v) {
+                startActivity(new Intent(Settings.ACTION_ACCESSIBILITY_SETTINGS));
             }
         });
 
-        findViewById(R.id.btnSaveKeywords).setOnClickListener(v -> {
-            GuardPrefs.saveKeywords(this, editKeywords.getText().toString());
-            statusText.setText("Keywords saved.");
+        findViewById(R.id.btnOverlay).setOnClickListener(new View.OnClickListener() {
+            public void onClick(View v) {
+                if (Build.VERSION.SDK_INT >= Build.VERSION_CODES.M) {
+                    Intent intent = new Intent(
+                            Settings.ACTION_MANAGE_OVERLAY_PERMISSION,
+                            Uri.parse("package:" + getPackageName())
+                    );
+                    startActivity(intent);
+                }
+            }
         });
 
-        findViewById(R.id.btnTestOverlay).setOnClickListener(v ->
-                OverlayManager.showBlockOverlay(this)
-        );
+        findViewById(R.id.btnSaveKeywords).setOnClickListener(new View.OnClickListener() {
+            public void onClick(View v) {
+                GuardPrefs.saveKeywords(self, editKeywords.getText().toString());
+                statusText.setText("Keywords saved.");
+            }
+        });
+
+        findViewById(R.id.btnTestOverlay).setOnClickListener(new View.OnClickListener() {
+            public void onClick(View v) {
+                OverlayManager.showBlockOverlay(self);
+            }
+        });
 
         updateStreak();
     }
 
-    @Override
     protected void onResume() {
         super.onResume();
         updateStreak();
