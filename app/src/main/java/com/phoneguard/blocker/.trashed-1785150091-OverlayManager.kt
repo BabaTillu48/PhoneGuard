@@ -21,7 +21,7 @@ object OverlayManager {
     private var speaking = false
 
     fun showBlockOverlay(context: Context) {
-        if (overlayView != null) return
+        if (overlayView != null) return // already showing
 
         val wm = context.getSystemService(Context.WINDOW_SERVICE) as WindowManager
         val inflater = LayoutInflater.from(context)
@@ -29,7 +29,7 @@ object OverlayManager {
 
         val streakText = view.findViewById<TextView>(R.id.streakText)
         val days = GuardPrefs.getStreakDays(context)
-        streakText.text = "Your streak reset at day $days. It restarts after you reboot."
+        streakText.text = "Your streak reset at day $days. It restarts after you reboot the phone."
 
         val closeBtn = view.findViewById<Button>(R.id.closeButton)
         closeBtn.setOnClickListener {
@@ -41,7 +41,6 @@ object OverlayManager {
         val type = if (Build.VERSION.SDK_INT >= Build.VERSION_CODES.O)
             WindowManager.LayoutParams.TYPE_APPLICATION_OVERLAY
         else
-            @Suppress("DEPRECATION")
             WindowManager.LayoutParams.TYPE_SYSTEM_ALERT
 
         val params = WindowManager.LayoutParams(
@@ -56,7 +55,7 @@ object OverlayManager {
         overlayView = view
 
         GuardPrefs.setBlockActive(context, true)
-        GuardPrefs.resetStreak(context)
+        GuardPrefs.resetStreak(context) // relapse detected -> streak restarts
 
         startSound(context)
     }
@@ -64,7 +63,7 @@ object OverlayManager {
     fun removeOverlayIfAny(context: Context) {
         overlayView?.let {
             val wm = context.getSystemService(Context.WINDOW_SERVICE) as WindowManager
-            try { wm.removeView(it) } catch (e: Exception) { }
+            try { wm.removeView(it) } catch (e: Exception) { /* ignore */ }
         }
         overlayView = null
         stopSound()

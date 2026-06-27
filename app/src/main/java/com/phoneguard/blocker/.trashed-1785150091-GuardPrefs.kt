@@ -6,8 +6,9 @@ import java.util.concurrent.TimeUnit
 object GuardPrefs {
     private const val PREF = "phoneguard_prefs"
     private const val KEY_KEYWORDS = "keywords"
-    private const val KEY_BLOCKED_ACTIVE = "blocked_active"
+    private const val KEY_BLOCKED_ACTIVE = "blocked_active"          // resets only on reboot
     private const val KEY_STREAK_START = "streak_start_millis"
+    private const val KEY_LAST_RELAPSE = "last_relapse_millis"
 
     private val DEFAULT_KEYWORDS = setOf(
         "porn", "xvideos", "xnxx", "xhamster", "pornhub", "redtube",
@@ -29,6 +30,7 @@ object GuardPrefs {
             .edit().putStringSet(KEY_KEYWORDS, set).apply()
     }
 
+    // ----- Block state: once triggered, stays "active" (locked) until device reboot -----
     fun isBlockActive(ctx: Context): Boolean =
         ctx.getSharedPreferences(PREF, Context.MODE_PRIVATE).getBoolean(KEY_BLOCKED_ACTIVE, false)
 
@@ -37,10 +39,14 @@ object GuardPrefs {
             .edit().putBoolean(KEY_BLOCKED_ACTIVE, active).apply()
     }
 
+    // Called by BootReceiver — clears the "lock" so cat screen can appear fresh next time,
+    // but ALSO counts as a relapse-reset point for the streak per user's spec
+    // (kitty only goes away on restart -> restart = the moment user "broke and restarted").
     fun clearBlockOnBoot(ctx: Context) {
         setBlockActive(ctx, false)
     }
 
+    // ----- Streak -----
     fun getStreakStart(ctx: Context): Long {
         val sp = ctx.getSharedPreferences(PREF, Context.MODE_PRIVATE)
         var start = sp.getLong(KEY_STREAK_START, 0L)
@@ -56,6 +62,7 @@ object GuardPrefs {
         ctx.getSharedPreferences(PREF, Context.MODE_PRIVATE)
             .edit()
             .putLong(KEY_STREAK_START, now)
+            .putLong(KEY_LAST_RELAPSE, now)
             .apply()
     }
 

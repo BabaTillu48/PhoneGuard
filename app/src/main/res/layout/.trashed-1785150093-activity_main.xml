@@ -10,13 +10,28 @@
     android:orientation="vertical"
     android:padding="20dp">
 
-    <TextView
-        android:layout_width="wrap_content"
+    <LinearLayout
+        android:layout_width="match_parent"
         android:layout_height="wrap_content"
-        android:text="PhoneGuard"
-        android:textSize="28sp"
-        android:textStyle="bold"
-        android:textColor="#1A1A1A" />
+        android:orientation="horizontal"
+        android:gravity="center_vertical"
+        android:paddingTop="8dp"
+        android:paddingBottom="16dp">
+
+        <ImageView
+            android:layout_width="40dp"
+            android:layout_height="40dp"
+            android:src="@drawable/ic_cat" />
+
+        <TextView
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:layout_marginStart="12dp"
+            android:text="PhoneGuard"
+            android:textSize="24sp"
+            android:textStyle="bold"
+            android:textColor="#1A1A1A" />
+    </LinearLayout>
 
     <LinearLayout
         android:layout_width="match_parent"
@@ -24,22 +39,22 @@
         android:orientation="vertical"
         android:background="#FFFFFF"
         android:padding="16dp"
-        android:layout_marginTop="16dp"
         android:layout_marginBottom="16dp">
 
         <TextView
             android:layout_width="wrap_content"
             android:layout_height="wrap_content"
-            android:text="Current Streak"
+            android:text="CURRENT STREAK"
             android:textSize="12sp"
-            android:textColor="#7F8C8D" />
+            android:textColor="#7F8C8D"
+            android:letterSpacing="0.1" />
 
         <TextView
             android:id="@+id/streakDisplay"
             android:layout_width="wrap_content"
             android:layout_height="wrap_content"
-            android:layout_marginTop="8dp"
-            android:textSize="24sp"
+            android:layout_marginTop="4dp"
+            android:textSize="22sp"
             android:textStyle="bold"
             android:textColor="#2C3E50" />
     </LinearLayout>
@@ -50,12 +65,12 @@
         android:orientation="vertical"
         android:background="#FFFFFF"
         android:padding="16dp"
-        android:layout_marginBottom="12dp">
+        android:layout_marginBottom="16dp">
 
         <TextView
             android:layout_width="match_parent"
             android:layout_height="wrap_content"
-            android:text="Step 1 — Enable Accessibility"
+            android:text="Step 1 — Enable Accessibility Access"
             android:textSize="15sp"
             android:textStyle="bold"
             android:textColor="#1A1A1A" />
@@ -64,8 +79,8 @@
             android:layout_width="match_parent"
             android:layout_height="wrap_content"
             android:layout_marginTop="4dp"
-            android:text="Required to detect blocked content in your browser."
-            android:textSize="12sp"
+            android:text="Required so PhoneGuard can check which website is open in your browser."
+            android:textSize="13sp"
             android:textColor="#7F8C8D" />
 
         <Button
@@ -84,12 +99,12 @@
         android:orientation="vertical"
         android:background="#FFFFFF"
         android:padding="16dp"
-        android:layout_marginBottom="12dp">
+        android:layout_marginBottom="16dp">
 
         <TextView
             android:layout_width="match_parent"
             android:layout_height="wrap_content"
-            android:text="Step 2 — Grant Overlay Permission"
+            android:text="Step 2 — Enable Overlay Permission"
             android:textSize="15sp"
             android:textStyle="bold"
             android:textColor="#1A1A1A" />
@@ -98,8 +113,8 @@
             android:layout_width="match_parent"
             android:layout_height="wrap_content"
             android:layout_marginTop="4dp"
-            android:text="Required to display the warning screen."
-            android:textSize="12sp"
+            android:text="Required so PhoneGuard can display the warning screen."
+            android:textSize="13sp"
             android:textColor="#7F8C8D" />
 
         <Button
@@ -118,12 +133,12 @@
         android:orientation="vertical"
         android:background="#FFFFFF"
         android:padding="16dp"
-        android:layout_marginBottom="12dp">
+        android:layout_marginBottom="16dp">
 
         <TextView
             android:layout_width="match_parent"
             android:layout_height="wrap_content"
-            android:text="Blocked Keywords"
+            android:text="Blocked Keywords / Domains"
             android:textSize="15sp"
             android:textStyle="bold"
             android:textColor="#1A1A1A" />
@@ -133,20 +148,19 @@
             android:layout_height="wrap_content"
             android:layout_marginTop="4dp"
             android:text="One per line."
-            android:textSize="12sp"
+            android:textSize="13sp"
             android:textColor="#7F8C8D" />
 
         <EditText
             android:id="@+id/editKeywords"
             android:layout_width="match_parent"
-            android:layout_height="140dp"
+            android:layout_height="160dp"
             android:layout_marginTop="10dp"
             android:gravity="top"
             android:inputType="textMultiLine"
             android:background="#F0F0F0"
             android:textColor="#1A1A1A"
-            android:padding="10dp"
-            android:textSize="12sp" />
+            android:padding="10dp" />
 
         <Button
             android:id="@+id/btnSaveKeywords"
@@ -164,15 +178,17 @@
         android:layout_height="wrap_content"
         android:textColor="#2C3E50"
         android:textSize="13sp"
-        android:layout_marginBottom="12dp" />
+        android:layout_marginBottom="8dp" />
 
     <Button
         android:id="@+id/btnTestOverlay"
         android:layout_width="match_parent"
         android:layout_height="wrap_content"
+        android:layout_marginTop="4dp"
+        android:layout_marginBottom="24dp"
         android:backgroundTint="#7F8C8D"
         android:textColor="#FFFFFF"
-        android:text="Test Now (Preview Warning)" />
+        android:text="Run Test (Preview Warning Screen)" />
 
 </LinearLayout>
 </ScrollView>
